@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-canvas text-ink antialiased;
+}
+
+a {
+  @apply underline-offset-4 transition-colors;
+}
+
+a:hover {
+  @apply text-accentDark;
+}
+
+::selection {
+  @apply bg-accent text-surface;
+}
+
