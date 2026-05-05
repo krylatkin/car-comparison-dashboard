@@ -8,11 +8,11 @@ export function buildCarJsonLd(car: Car) {
       '@type': 'Brand',
       name: car.brand,
     },
-    name: `${car.year} ${car.brand} ${car.model}`,
+    name: `${String(car.year)} ${car.brand} ${car.model}`,
     image: [car.image.src],
     sku: car.id,
     category: car.type,
-    description: `Compare the ${car.year} ${car.brand} ${car.model} by price, weight, rating, and category.`,
+    description: `Compare the ${String(car.year)} ${car.brand} ${car.model} by price, weight, rating, and category.`,
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/InStock',
@@ -24,7 +24,7 @@ export function buildCarJsonLd(car: Car) {
       {
         '@type': 'PropertyValue',
         name: 'Weight',
-        value: `${car.weightKg} kg`,
+        value: `${String(car.weightKg)} kg`,
       },
       {
         '@type': 'PropertyValue',
@@ -41,4 +41,3 @@ export function buildCarJsonLd(car: Car) {
     },
   };
 }
-

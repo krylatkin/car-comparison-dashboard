@@ -4,7 +4,7 @@ import { CarListSchema } from '@/features/cars/domain/car.schemas';
 import type { Car, CarFilters, CarSortDirection, CarSortField } from '@/features/cars/domain/car.types';
 import { filterCars as applyFilters, sortCars as applySort } from '@/features/cars/domain/car.utils';
 
-const loadCars = cache(async (): Promise<Car[]> => CarListSchema.parse(carFixtures));
+const loadCars = cache((): Promise<Car[]> => Promise.resolve(CarListSchema.parse(carFixtures)));
 
 export const getCars = cache(
   async (options?: {
@@ -40,4 +40,3 @@ export function sortCars(
 ) {
   return applySort(cars, sort);
 }
-

@@ -1,20 +1,27 @@
 import js from '@eslint/js';
-import nextPlugin from 'eslint-config-next';
+import nextPlugin from '@next/eslint-plugin-next';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-const nextRules = Array.isArray(nextPlugin) ? nextPlugin : [nextPlugin];
-
 export default tseslint.config(
   {
-    ignores: ['.next/**', 'coverage/**', 'node_modules/**', 'playwright-report/**'],
+    ignores: [
+      '.next/**',
+      'coverage/**',
+      'node_modules/**',
+      'playwright-report/**',
+      '*.config.mjs',
+      'postcss.config.js',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  ...nextRules,
   {
     files: ['**/*.{ts,tsx}'],
+    plugins: {
+      '@next/next': nextPlugin,
+    },
     languageOptions: {
       ecmaVersion: 'latest',
       globals: {
@@ -27,8 +34,9 @@ export default tseslint.config(
       },
     },
     rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     },
   },
 );
-
