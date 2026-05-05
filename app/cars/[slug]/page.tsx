@@ -36,14 +36,14 @@ export async function generateMetadata({
 
   return {
     title: `${car.brand} ${car.model}`,
-      description: `View specs, pricing, and rating for the ${String(car.year)} ${car.brand} ${car.model}.`,
+      description: `View specs, pricing, and rating for the ${car.year} ${car.brand} ${car.model}.`,
     alternates: {
       canonical: `/cars/${car.slug}`,
     },
     openGraph: {
       type: 'article',
       title: `${car.brand} ${car.model}`,
-      description: `Detailed information for the ${String(car.year)} ${car.brand} ${car.model}.`,
+      description: `Detailed information for the ${car.year} ${car.brand} ${car.model}.`,
       url: `https://car-comparison.example.com/cars/${car.slug}`,
       images: [
         {
