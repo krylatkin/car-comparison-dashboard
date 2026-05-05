@@ -9,8 +9,10 @@ type PriceFieldLabels = {
 export type PriceRangeInputProps = {
   id?: string;
   label: string;
-  minValue?: number;
-  maxValue?: number;
+  minName?: string;
+  maxName?: string;
+  minValue?: number | undefined;
+  maxValue?: number | undefined;
   onMinValueChange?: (value: number | undefined) => void;
   onMaxValueChange?: (value: number | undefined) => void;
   minPlaceholder?: string;
@@ -34,9 +36,11 @@ export function PriceRangeInput({
   description,
   id,
   label,
+  maxName,
   labels,
   maxPlaceholder = 'Max price',
   maxValue,
+  minName,
   minPlaceholder = 'Min price',
   minValue,
   onMaxValueChange,
@@ -61,6 +65,7 @@ export function PriceRangeInput({
             inputMode="numeric"
             type="number"
             min={0}
+            name={minName}
             value={minValue ?? ''}
             placeholder={minPlaceholder}
             onChange={(event) => {
@@ -75,6 +80,7 @@ export function PriceRangeInput({
             inputMode="numeric"
             type="number"
             min={0}
+            name={maxName}
             value={maxValue ?? ''}
             placeholder={maxPlaceholder}
             onChange={(event) => {
@@ -87,4 +93,3 @@ export function PriceRangeInput({
     </fieldset>
   );
 }
-

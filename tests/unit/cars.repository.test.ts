@@ -44,5 +44,40 @@ describe('cars.repository', () => {
 
     expect(sortedCars[0]?.slug).toBe('bmw-x5-2023');
   });
-});
 
+  it('returns filtered and sorted cars from the repository', async () => {
+    const cars = await getCars({
+      filters: {
+        brands: ['BMW', 'Kia', 'Tesla'],
+        types: ['SUV', 'Electric'],
+        priceMax: 60_000,
+        ratingMin: 4.1,
+      },
+      sort: {
+        field: 'rating',
+        direction: 'desc',
+      },
+    });
+
+    expect(cars.map((car) => car.slug)).toEqual([
+      'tesla-model-y-2024',
+      'kia-sportage-2024',
+    ]);
+  });
+
+  it('returns an empty list when no cars match the filters', async () => {
+    const cars = await getCars({
+      filters: {
+        brands: ['Tesla'],
+        types: ['Truck'],
+        priceMin: 100_000,
+      },
+      sort: {
+        field: 'brand',
+        direction: 'asc',
+      },
+    });
+
+    expect(cars).toEqual([]);
+  });
+});
