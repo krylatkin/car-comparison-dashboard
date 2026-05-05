@@ -49,6 +49,8 @@ export function PriceRangeInput({
   const generatedId = React.useId();
   const fieldsetId = id ?? generatedId;
   const descriptionId = description ? `${fieldsetId}-description` : undefined;
+  const isMinControlled = onMinValueChange !== undefined;
+  const isMaxControlled = onMaxValueChange !== undefined;
 
   return (
     <fieldset className={cn('space-y-3', className)} aria-describedby={descriptionId}>
@@ -66,11 +68,18 @@ export function PriceRangeInput({
             type="number"
             min={0}
             name={minName}
-            value={minValue ?? ''}
+            defaultValue={isMinControlled ? undefined : minValue}
+            value={isMinControlled ? (minValue ?? '') : undefined}
             placeholder={minPlaceholder}
-            onChange={(event) => {
-              onMinValueChange?.(parseOptionalNumber(event.currentTarget.value));
-            }}
+            onChange={
+              isMinControlled
+                ? (event) => {
+                    onMinValueChange(
+                      parseOptionalNumber(event.currentTarget.value),
+                    );
+                  }
+                : undefined
+            }
             className="min-h-11 w-full rounded-2xl border border-line bg-surface px-4 py-2 text-sm text-ink shadow-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           />
         </label>
@@ -81,11 +90,18 @@ export function PriceRangeInput({
             type="number"
             min={0}
             name={maxName}
-            value={maxValue ?? ''}
+            defaultValue={isMaxControlled ? undefined : maxValue}
+            value={isMaxControlled ? (maxValue ?? '') : undefined}
             placeholder={maxPlaceholder}
-            onChange={(event) => {
-              onMaxValueChange?.(parseOptionalNumber(event.currentTarget.value));
-            }}
+            onChange={
+              isMaxControlled
+                ? (event) => {
+                    onMaxValueChange(
+                      parseOptionalNumber(event.currentTarget.value),
+                    );
+                  }
+                : undefined
+            }
             className="min-h-11 w-full rounded-2xl border border-line bg-surface px-4 py-2 text-sm text-ink shadow-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           />
         </label>
