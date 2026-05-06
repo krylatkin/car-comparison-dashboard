@@ -19,8 +19,8 @@ test.describe('/cars catalog', () => {
   }) => {
     await page.goto('/cars');
 
-    await page.getByLabel('Tesla').check();
-    await page.getByLabel('Electric').check();
+    await page.getByRole('checkbox', { name: 'Tesla' }).check();
+    await page.getByRole('checkbox', { name: 'Electric' }).check();
     await page.getByLabel('Minimum rating').selectOption('4.7');
     await page.getByLabel('Field').selectOption('rating');
     await page.getByLabel('Direction').selectOption('desc');

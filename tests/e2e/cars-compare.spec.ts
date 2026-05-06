@@ -1,6 +1,25 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('/compare flow', () => {
+  test('opens the car detail page when the catalog image is clicked', async ({
+    page,
+  }) => {
+    await page.goto('/cars?sort=brand&direction=asc');
+
+    const imageLink = page.getByRole('link', {
+      name: /view details for 2023 audi a5/i,
+    });
+
+    await Promise.all([
+      page.waitForURL(/\/cars\/audi-a5-2023$/),
+      imageLink.click(),
+    ]);
+
+    await expect(
+      page.getByRole('heading', { name: /2023 audi a5/i }),
+    ).toBeVisible();
+  });
+
   test('filters the catalog, selects two cars, and opens the comparison table', async ({
     page,
   }) => {
@@ -32,6 +51,45 @@ test.describe('/compare flow', () => {
     await expect(page.getByRole('table')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Ioniq 5' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Model Y' })).toBeVisible();
+  });
+
+  test('lets the user add cars from a detail page without redirecting to comparison', async ({
+    page,
+  }) => {
+    await page.goto('/cars?sort=brand&direction=asc');
+
+    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await expect(page.getByText('1 of 4 selected')).toBeVisible();
+
+    await Promise.all([
+      page.waitForURL(/\/cars\/bmw-x5-2023\?cars=audi-a5-2023$/),
+      page
+        .getByRole('link', { name: /view details for 2023 bmw x5/i })
+        .click(),
+    ]);
+
+    await expect(page.getByRole('heading', { name: /2023 bmw x5/i })).toBeVisible();
+    await expect(page).toHaveURL(/cars=bmw-x5-2023|cars=audi-a5-2023/);
+
+    await Promise.all([
+      page.waitForURL(/\/cars\/bmw-x5-2023\?cars=audi-a5-2023,bmw-x5-2023$/),
+      page.getByRole('link', { name: 'Add to compare' }).click(),
+    ]);
+
+    const detailUrl = new URL(page.url());
+    expect(detailUrl.pathname).toBe('/cars/bmw-x5-2023');
+    expect(detailUrl.searchParams.get('cars')).toBe(
+      'audi-a5-2023,bmw-x5-2023',
+    );
+
+    await Promise.all([
+      page.waitForURL(/\/compare\?cars=audi-a5-2023,bmw-x5-2023$/),
+      page.getByRole('link', { name: /open comparison/i }).click(),
+    ]);
+
+    await expect(page.getByRole('table')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'A5' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'X5' })).toBeVisible();
   });
 
   test('renders selected cars in the comparison table from URL params', async ({
