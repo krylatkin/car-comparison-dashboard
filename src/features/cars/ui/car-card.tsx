@@ -32,14 +32,20 @@ export function CarCard({
   return (
     <Card className="overflow-hidden">
       <div className="relative aspect-[16/10] border-b border-line bg-canvas">
-        <Image
-          src={car.image.src}
-          alt={car.image.alt}
-          fill
-          loading="lazy"
-          sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
-          className="object-cover"
-        />
+        <Link
+          href={`/cars/${car.slug}`}
+          aria-label={`View details for ${car.year} ${car.brand} ${car.model}`}
+          className="absolute inset-0 block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          <Image
+            src={car.image.src}
+            alt={car.image.alt}
+            fill
+            loading="lazy"
+            sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
+            className="object-cover transition-transform duration-300 hover:scale-[1.02]"
+          />
+        </Link>
       </div>
       <CardContent className="space-y-5 p-6">
         <div className="flex items-start justify-between gap-4">

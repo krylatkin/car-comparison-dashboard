@@ -107,7 +107,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
 
         <Card className="overflow-hidden">
           <div className="grid gap-0 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-            <div className="relative aspect-[16/11] bg-canvas">
+            <div className="relative aspect-[16/11] lg:aspect-auto lg:h-full">
               <Image
                 src={car.image.src}
                 alt={car.image.alt}
@@ -179,9 +179,9 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           </div>
         </Card>
 
-        <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <section className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <Card>
-            <CardContent className="space-y-4 p-8">
+            <CardContent className="space-y-4 p-5 sm:p-6 lg:p-8">
               <h2 className="text-2xl font-semibold tracking-tight">
                 Overview
               </h2>
@@ -202,7 +202,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           </Card>
 
           <Card>
-            <CardContent className="space-y-4 p-8">
+            <CardContent className="space-y-4 p-5 sm:p-6 lg:p-8">
               <h2 className="text-2xl font-semibold tracking-tight">
                 Next actions
               </h2>
