@@ -1,33 +1,21 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Car } from '@/features/cars/domain/car.types';
-import {
-  buildComparisonCarsParam,
-  toggleComparisonCar,
-} from '@/features/cars/compare/cars-compare.utils';
-import { MAX_COMPARISON_CARS } from '@/features/cars/compare/cars-compare.constants';
+import { buildComparisonCarsParam } from '@/features/cars/compare/cars-compare.utils';
 import { formatCurrency } from '@/shared/lib/formatters';
 import { Badge, Card, CardContent } from '@/shared/ui';
+import { getCarImageObjectPosition } from './car-image.styles';
+import { CompareToggleButton } from './compare-toggle-button';
 
 type CarCardProps = {
   car: Car;
-  compareSearch: string;
   selectedComparisonSlugs: string[];
 };
 
 export function CarCard({
   car,
-  compareSearch,
   selectedComparisonSlugs,
 }: CarCardProps) {
-  const isSelected = selectedComparisonSlugs.includes(car.slug);
-  const nextSelectedSlugs = toggleComparisonCar(selectedComparisonSlugs, car.slug);
-  const canAddMore =
-    selectedComparisonSlugs.length < MAX_COMPARISON_CARS || isSelected;
-  const separator = compareSearch.includes('?') ? '&' : '?';
-  const compareHref = canAddMore
-    ? `${compareSearch}${separator}cars=${buildComparisonCarsParam(nextSelectedSlugs)}`
-    : compareSearch;
   const detailHref =
     selectedComparisonSlugs.length > 0
       ? `/cars/${car.slug}?cars=${buildComparisonCarsParam(selectedComparisonSlugs)}`
@@ -48,6 +36,7 @@ export function CarCard({
             loading="lazy"
             sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
             className="object-cover transition-transform duration-300 hover:scale-[1.02]"
+            style={getCarImageObjectPosition(car.image)}
           />
         </Link>
       </div>
@@ -85,21 +74,14 @@ export function CarCard({
             <dt className="text-ink/60">Weight</dt>
             <dd className="font-medium">{car.weightKg} kg</dd>
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <dt className="text-ink/60">Compare</dt>
             <dd className="font-medium">
-              {canAddMore ? (
-                <Link
-                  href={compareHref}
-                  className="text-accentDark no-underline hover:underline"
-                >
-                  {isSelected ? 'Remove from compare' : 'Add to compare'}
-                </Link>
-              ) : (
-                <span className="text-ink/50">
-                  Compare limit reached
-                </span>
-              )}
+              <CompareToggleButton
+                slug={car.slug}
+                selectedSlugs={selectedComparisonSlugs}
+                className="mt-1"
+              />
             </dd>
           </div>
         </dl>

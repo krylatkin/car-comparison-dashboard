@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import {
-  buildCarsCatalogSearchParams,
   getCarsCatalogFilterOptions,
   parseCarsCatalogSearchParams,
 } from '@/features/cars/catalog/cars-catalog.utils';
@@ -39,9 +38,6 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
     }),
   ]);
   const filterOptions = getCarsCatalogFilterOptions(allCars);
-  const compareSearchParams = buildCarsCatalogSearchParams(state);
-  const compareSearch = compareSearchParams.toString();
-  const compareBaseHref = compareSearch ? `/cars?${compareSearch}` : '/cars';
 
   return (
     <PageShell>
@@ -81,7 +77,6 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
                   <li key={car.id}>
                     <CarCard
                       car={car}
-                      compareSearch={compareBaseHref}
                       selectedComparisonSlugs={selectedComparisonSlugs}
                     />
                   </li>

@@ -31,10 +31,10 @@ test.describe('/compare flow', () => {
     await expect(page).toHaveURL(/\/cars\?/);
     await expect(page.getByText('2 results')).toBeVisible();
 
-    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await page.getByRole('button', { name: 'Add to compare' }).nth(0).click();
     await expect(page.getByText('1 of 4 selected')).toBeVisible();
 
-    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await page.getByRole('button', { name: 'Add to compare' }).nth(0).click();
     await expect(page.getByText('2 of 4 selected')).toBeVisible();
 
     const compareLink = page.getByRole('link', {
@@ -58,7 +58,7 @@ test.describe('/compare flow', () => {
   }) => {
     await page.goto('/cars?sort=brand&direction=asc');
 
-    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await page.getByRole('button', { name: 'Add to compare' }).nth(0).click();
     await expect(page.getByText('1 of 4 selected')).toBeVisible();
 
     await Promise.all([
@@ -73,8 +73,12 @@ test.describe('/compare flow', () => {
 
     await Promise.all([
       page.waitForURL(/\/cars\/bmw-x5-2023\?cars=audi-a5-2023,bmw-x5-2023$/),
-      page.getByRole('link', { name: 'Add to compare' }).click(),
+      page
+        .locator('header')
+        .getByRole('button', { name: 'Add to compare' })
+        .click(),
     ]);
+    await expect(page.getByRole('button', { name: 'Remove from compare' })).toBeVisible();
 
     const detailUrl = new URL(page.url());
     expect(detailUrl.pathname).toBe('/cars/bmw-x5-2023');
@@ -136,11 +140,11 @@ test.describe('/compare flow', () => {
   }) => {
     await page.goto('/cars?sort=brand&direction=asc');
 
-    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await page.getByRole('button', { name: 'Add to compare' }).nth(0).click();
     await expect(page).toHaveURL(/cars\?sort=brand&direction=asc&cars=/);
     await expect(page.getByText('1 of 4 selected')).toBeVisible();
 
-    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await page.getByRole('button', { name: 'Add to compare' }).nth(0).click();
     await expect(page.getByText('2 of 4 selected')).toBeVisible();
 
     const compareLink = page.getByRole('link', {

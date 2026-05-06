@@ -5,12 +5,13 @@ import { notFound } from 'next/navigation';
 import {
   buildComparisonCarsParam,
   parseComparisonCarsParam,
-  toggleComparisonCar,
 } from '@/features/cars/compare/cars-compare.utils';
 import {
   getCarBySlug,
   getCars,
 } from '@/features/cars/data/cars.repository';
+import { CompareToggleButton } from '@/features/cars/ui/compare-toggle-button';
+import { getCarImageObjectPosition } from '@/features/cars/ui/car-image.styles';
 import { buildCarJsonLd } from '@/features/cars/seo/build-car-json-ld';
 import { formatCurrency } from '@/shared/lib/formatters';
 import { Badge, Card, CardContent, PageShell } from '@/shared/ui';
@@ -104,19 +105,7 @@ export default async function CarDetailPage({
 
   const jsonLd = buildCarJsonLd(car);
   const selectedComparisonSlugs = parseComparisonCarsParam(query.cars);
-  const nextSelectedComparisonSlugs = toggleComparisonCar(
-    selectedComparisonSlugs,
-    car.slug,
-  );
-  const isSelectedForComparison = selectedComparisonSlugs.includes(car.slug);
   const selectedCarsParam = buildComparisonCarsParam(selectedComparisonSlugs);
-  const nextSelectedCarsParam = buildComparisonCarsParam(
-    nextSelectedComparisonSlugs,
-  );
-  const selectionHref =
-    nextSelectedCarsParam.length > 0
-      ? `/cars/${car.slug}?cars=${nextSelectedCarsParam}`
-      : `/cars/${car.slug}`;
   const compareHref =
     selectedCarsParam.length > 0
       ? `/compare?cars=${selectedCarsParam}`
@@ -146,6 +135,7 @@ export default async function CarDetailPage({
                 priority
                 sizes="(min-width: 1024px) 55vw, 100vw"
                 className="object-cover"
+                style={getCarImageObjectPosition(car.image)}
               />
             </div>
 
@@ -167,14 +157,11 @@ export default async function CarDetailPage({
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Link
-                    href={selectionHref}
-                    className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-surface no-underline transition hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                  >
-                    {isSelectedForComparison
-                      ? 'Remove from compare'
-                      : 'Add to compare'}
-                  </Link>
+                  <CompareToggleButton
+                    slug={car.slug}
+                    selectedSlugs={selectedComparisonSlugs}
+                    variant="pill"
+                  />
                   <Link
                     href={compareHref}
                     className="inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-surface px-5 py-3 text-sm font-medium text-ink no-underline transition hover:bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
@@ -250,14 +237,10 @@ export default async function CarDetailPage({
                 <li>Return to the catalog to compare more models.</li>
                 <li>Review structured specs before filtering alternatives.</li>
               </ul>
-              <Link
-                href={selectionHref}
-                className="text-sm font-medium text-accentDark no-underline hover:underline"
-              >
-                {isSelectedForComparison
-                  ? `Remove ${car.model} from compare`
-                  : `Add ${car.model} to compare`}
-              </Link>
+              <CompareToggleButton
+                slug={car.slug}
+                selectedSlugs={selectedComparisonSlugs}
+              />
             </CardContent>
           </Card>
         </section>

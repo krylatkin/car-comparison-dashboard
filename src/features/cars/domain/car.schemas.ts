@@ -14,6 +14,10 @@ export const CarImageSchema = z.object({
   alt: z.string().min(10),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
+  focalPoint: z.object({
+    x: z.number().min(0).max(100),
+    y: z.number().min(0).max(100),
+  }),
 });
 
 export const CarSchema = z.object({
@@ -48,4 +52,3 @@ export const CarSortSchema = z.object({
   field: CarSortFieldSchema,
   direction: CarSortDirectionSchema.default('asc'),
 });
-

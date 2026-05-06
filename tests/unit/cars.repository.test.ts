@@ -12,6 +12,7 @@ describe('cars.repository', () => {
 
     expect(cars.length).toBeGreaterThan(0);
     expect(cars[0]).toHaveProperty('slug');
+    expect(cars[0]?.image.focalPoint).toEqual({ x: 50, y: 52 });
   });
 
   it('returns a car by slug', async () => {

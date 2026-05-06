@@ -16,6 +16,10 @@ export const carFixtures: Car[] = [
       alt: 'Gray Tesla Model Y parked outdoors',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 50,
+        y: 52,
+      },
     },
     createdAt: '2026-01-10T10:00:00.000Z',
     updatedAt: '2026-04-28T10:00:00.000Z',
@@ -35,6 +39,10 @@ export const carFixtures: Car[] = [
       alt: 'Black BMW SUV on a city street',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 52,
+        y: 48,
+      },
     },
     createdAt: '2026-01-11T10:00:00.000Z',
     updatedAt: '2026-04-20T10:00:00.000Z',
@@ -54,6 +62,10 @@ export const carFixtures: Car[] = [
       alt: 'Red Toyota sedan photographed from the front',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 52,
+        y: 52,
+      },
     },
     createdAt: '2026-01-12T10:00:00.000Z',
     updatedAt: '2026-04-24T10:00:00.000Z',
@@ -73,6 +85,10 @@ export const carFixtures: Car[] = [
       alt: 'Blue pickup truck driving on a road',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 52,
+        y: 55,
+      },
     },
     createdAt: '2026-01-13T10:00:00.000Z',
     updatedAt: '2026-04-18T10:00:00.000Z',
@@ -92,6 +108,10 @@ export const carFixtures: Car[] = [
       alt: 'White Audi coupe parked near a building',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 72,
+        y: 50,
+      },
     },
     createdAt: '2026-01-14T10:00:00.000Z',
     updatedAt: '2026-04-22T10:00:00.000Z',
@@ -111,6 +131,10 @@ export const carFixtures: Car[] = [
       alt: 'Silver Honda Civic in motion',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 56,
+        y: 52,
+      },
     },
     createdAt: '2026-01-15T10:00:00.000Z',
     updatedAt: '2026-04-26T10:00:00.000Z',
@@ -130,6 +154,10 @@ export const carFixtures: Car[] = [
       alt: 'Modern electric crossover in a clean urban setting',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 54,
+        y: 48,
+      },
     },
     createdAt: '2026-01-16T10:00:00.000Z',
     updatedAt: '2026-04-27T10:00:00.000Z',
@@ -149,9 +177,12 @@ export const carFixtures: Car[] = [
       alt: 'Blue Kia SUV parked on an open road',
       width: 1200,
       height: 800,
+      focalPoint: {
+        x: 50,
+        y: 52,
+      },
     },
     createdAt: '2026-01-17T10:00:00.000Z',
     updatedAt: '2026-04-29T10:00:00.000Z',
   },
 ];
-
