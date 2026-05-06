@@ -1,6 +1,39 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('/compare flow', () => {
+  test('filters the catalog, selects two cars, and opens the comparison table', async ({
+    page,
+  }) => {
+    await page.goto('/cars');
+
+    await page.getByLabel('Electric').check();
+    await page.getByRole('button', { name: /apply filters/i }).click();
+
+    await expect(page).toHaveURL(/\/cars\?/);
+    await expect(page.getByText('2 results')).toBeVisible();
+
+    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await expect(page.getByText('1 of 4 selected')).toBeVisible();
+
+    await page.getByRole('link', { name: 'Add to compare' }).nth(0).click();
+    await expect(page.getByText('2 of 4 selected')).toBeVisible();
+
+    const compareLink = page.getByRole('link', {
+      name: /compare selected cars/i,
+    });
+    await Promise.all([
+      page.waitForURL(/\/compare\?cars=/),
+      compareLink.click(),
+    ]);
+
+    await expect(
+      page.getByRole('heading', { name: /compare selected cars/i }),
+    ).toBeVisible();
+    await expect(page.getByRole('table')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Ioniq 5' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Model Y' })).toBeVisible();
+  });
+
   test('renders selected cars in the comparison table from URL params', async ({
     page,
   }) => {

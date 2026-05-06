@@ -2,9 +2,16 @@
 
 Production-grade project is designed as an SEO-friendly, accessible, URL-driven car comparison application built with Next.js App Router, React, TypeScript, and Tailwind CSS.
 
-## Goal
+## Project goal
 
-Build a comparison experience where users can browse cars, filter and sort the inventory, open indexable detail pages, and compare multiple vehicles side-by-side without relying on unnecessary global client state.
+Build a car catalog where users can:
+
+- browse inventory on a crawlable `/cars` route
+- filter and sort cars through URL search params
+- open SEO-friendly detail pages on `/cars/[slug]`
+- select up to four cars and compare them side by side on `/compare`
+
+The project is intentionally structured like a production frontend rather than a quick demo: domain logic is separated from rendering, search params are the source of truth, and the codebase is ready to evolve from mock data to a real backend.
 
 ## Stack
 
@@ -12,52 +19,202 @@ Build a comparison experience where users can browse cars, filter and sort the i
 - React
 - TypeScript with strict compiler settings
 - Tailwind CSS
-- Zod for runtime validation
-- ESLint with typed rules
+- Zod
+- ESLint
 - Prettier
-- Vitest and React Testing Library
+- Vitest
+- React Testing Library
 - Playwright
+
+## Setup
+
+### Prerequisites
+
+- Node.js 22+
+- npm 10+
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Development command
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Commands
+
+### Test commands
+
+```bash
+npm run test:unit
+npm run test:e2e
+npm run test
+```
+
+### Quality checks
+
+```bash
+npm run lint
+npm run typecheck
+npm run format
+```
+
+### Build command
+
+```bash
+npm run build
+npm run start
+```
 
 ## Architecture decisions
 
 ### Feature-based structure
 
-The codebase starts with a `src/features/cars` module that groups together domain types, Zod schemas, mock data, repository functions, and SEO helpers. Shared layout primitives and utilities live under `src/shared`.
+The main product logic lives under `src/features/cars`, grouped by concern:
+
+- `data/` for repository and mock data
+- `domain/` for schemas, types, filtering, and sorting rules
+- `catalog/` for catalog-specific query-state parsing
+- `compare/` for comparison-state parsing and compare helpers
+- `seo/` for structured data helpers
+- `ui/` for feature-specific view components
+
+Shared primitives live under `src/shared`.
 
 ### Domain logic separated from UI
 
-Filtering and sorting are implemented as pure functions in the domain layer. The repository module composes those functions and exposes an API-ready surface:
+Filtering, sorting, query parsing, and comparison state are kept out of page components. This makes the behavior easier to test and easier to migrate to a real API later.
+
+The main data surface is intentionally API-ready:
 
 - `getCars`
 - `getCarBySlug`
 - `filterCars`
 - `sortCars`
 
-This makes the data layer easy to swap from mock fixtures to a remote API or CMS without reworking UI components.
+### URL as the source of truth
 
-### URL-driven state
+The catalog and compare flows are URL-driven by design:
 
-The future listing and compare experiences are intentionally designed around search params. This supports server rendering, shareable URLs, browser navigation, and predictable state recovery.
+- filters and sorting live in `/cars?...`
+- comparison selection lives in `/compare?cars=slug1,slug2`
 
-### SEO-first routing
+This improves:
 
-The foundation already includes:
+- shareability
+- back/forward navigation
+- SSR consistency
+- testability
+- SEO crawlability
 
-- route metadata for `/`, `/cars`, `/cars/[slug]`, and `/compare`
-- `robots.txt`
-- `sitemap.xml`
-- JSON-LD generation for car detail pages
-- canonical URLs per route
+### Server-first rendering
+
+Most of the app is built with Server Components. Client state is minimized to avoid unnecessary hydration and to keep routes meaningful without JavaScript.
 
 ### Testing strategy
 
-The project is prepared for three testing layers:
+The app includes three layers of tests:
 
-- unit tests for domain logic and repositories
-- component tests for React UI
-- e2e tests for route-level behavior and URL-driven flows
+- unit tests for pure domain and query-state logic
+- component tests for reusable UI building blocks
+- e2e tests for user flows such as filtering, selecting cars, and opening the comparison table
 
-Initial smoke tests are included so the test setup is exercised from the start.
+## SEO approach
+
+The app is built to be crawlable and meaningful without client-side interaction.
+
+Current SEO strategy includes:
+
+- server-rendered routes for `/`, `/cars`, `/cars/[slug]`, and `/compare`
+- static params for all car detail pages
+- dynamic metadata per car detail page
+- canonical URLs
+- Open Graph and Twitter metadata
+- `robots.txt`
+- `sitemap.xml`
+- JSON-LD Product structured data on detail pages
+
+The goal is that search engines can extract meaningful inventory and detail information directly from HTML, without waiting for client-side rendering.
+
+## Performance approach
+
+### Lighthouse targets
+
+- Performance: 90+
+- Accessibility: 95+
+- SEO: 95+
+
+### Current implementation
+
+- Prefer Server Components by default.
+- Keep filters and compare state in URL params rather than client stores.
+- Use `next/image` for responsive image delivery.
+- Keep catalog images lazy and prioritize the detail hero image.
+- Add route-level `loading.tsx` skeleton states for perceived performance.
+- Avoid unnecessary client components and hydration-heavy patterns.
+- Keep expensive behavior in pure utilities rather than interactive UI state.
+
+### CDN and cache strategy
+
+#### Vercel
+
+- Let App Router pages and static assets ride on Vercel’s CDN.
+- Use static generation for car detail pages where possible.
+- Use ISR or tag-based revalidation when the mock layer is replaced by a real data source.
+- Continue serving images through `next/image` or move image assets to a first-party CDN if volume grows.
+
+#### AWS S3 and CloudFront
+
+- Use S3 for immutable static assets rather than as the only host for SSR App Router behavior.
+- Put CloudFront in front of assets and configure separate cache behaviors for HTML, data, and media.
+- Use long TTLs for hashed assets and shorter TTLs for HTML or API responses.
+- Add invalidation or framework-driven revalidation when inventory changes.
+
+#### Suggested cache policy
+
+- immutable JS/CSS/font assets: `public, max-age=31536000, immutable`
+- HTML pages: shorter TTL or framework-managed revalidation
+- inventory APIs: tuned to freshness requirements
+- image derivatives: long CDN caching with modern formats and responsive variants
+
+## Accessibility approach
+
+Accessibility is treated as a default engineering concern rather than a polish step.
+
+Current approach includes:
+
+- semantic headings, lists, tables, forms, and fieldsets
+- labeled form controls by default in shared UI
+- visible focus styles
+- comparison table with real table semantics
+- keyboard-accessible links and controls
+- meaningful empty states and loading states
+- server-rendered content so important information is available even without client-side execution
+
+The target is Lighthouse Accessibility 95+ with additional manual QA for keyboard navigation and screen reader semantics.
+
+## Trade-offs
+
+- The project currently uses mock data instead of a real backend, so cache invalidation and network failure states are only partially represented.
+- The filter form uses server-driven navigation instead of richer client-side instant filtering in order to keep SSR, shareability, and crawlability first.
+- Images use remote demo assets, which is fine for an assignment but would likely move to a managed product image pipeline in production.
+- The compare flow is link-driven rather than stateful client-side drag-and-drop, which keeps the architecture simpler and more resilient.
+
+## Future improvements
+
+- Replace mock data with a real API or CMS-backed inventory service.
+- Add pagination or virtualized browsing for larger catalogs.
+- Add blur placeholders and stronger image pipeline controls.
+- Add analytics and Core Web Vitals monitoring in production.
+- Add richer empty, error, and stale-data states once a backend exists.
+- Expand e2e coverage for detail-page SEO and metadata-adjacent flows.
+- Add design-system documentation or Storybook if the shared UI layer grows.
 
 ## Folder structure
 
@@ -68,9 +225,12 @@ app/
 src/
   features/
     cars/
+      catalog/
+      compare/
       data/
       domain/
       seo/
+      ui/
   shared/
     lib/
     ui/
@@ -78,67 +238,4 @@ tests/
   unit/
   components/
   e2e/
-```
-
-## Performance
-
-### Lighthouse targets
-
-- Performance: 90+
-- Accessibility: 95+
-- SEO: 95+
-
-### Current performance approach
-
-- Prefer Server Components by default and keep client-side interactivity minimal.
-- Store filter and comparison state in URL search params instead of duplicating it in client state.
-- Use `next/image` for catalog and detail images with responsive `sizes`, optimized delivery, and lazy loading for non-critical images.
-- Keep the car detail hero image prioritized while allowing catalog cards to load lazily.
-- Add route-level loading UI with skeletons so transitions remain visually stable without converting pages to client components.
-- Keep filtering, sorting, and comparison rules in pure domain helpers so rendering stays lightweight and predictable.
-
-### Production performance checklist
-
-- Replace mock data with a cacheable API or CMS endpoint and use `fetch` caching, ISR, or tag-based revalidation based on inventory freshness needs.
-- Add real image blur placeholders or CDN-generated low-quality placeholders for large catalogs.
-- Measure real pages with Lighthouse and WebPageTest after deployment, especially `/cars`, `/cars/[slug]`, and `/compare`.
-- Track Core Web Vitals in production and review image payload size, TTFB, LCP, and CLS before handoff.
-
-## CDN and cache strategy
-
-### Vercel
-
-- Serve App Router pages from Vercel’s edge network and let static assets be cached aggressively by the platform CDN.
-- Use static generation where possible for car detail pages and keep metadata, sitemap, and robots server-generated but cacheable.
-- For a future backend, use ISR or tag-based revalidation for car inventory updates instead of shifting the catalog to full client fetching.
-- Cache remote car images behind the Next.js image optimizer or move them to a first-party image CDN when traffic patterns justify it.
-
-### AWS S3 and CloudFront
-
-- Build the app with Next.js hosting that supports SSR/ISR rather than treating S3 alone as the application host if dynamic App Router behavior is required.
-- Use S3 for static assets and CloudFront as the CDN layer with long TTLs for hashed assets such as JS, CSS, fonts, and optimized images.
-- Keep HTML and data responses on shorter TTLs or pair them with explicit invalidation/revalidation when inventory changes.
-- Configure CloudFront behaviors separately for HTML, image assets, and immutable build artifacts so cache policy matches content volatility.
-
-### Cache policy guidance
-
-- Immutable build assets: long TTL, `Cache-Control: public, max-age=31536000, immutable`
-- Catalog/detail HTML: shorter TTL or framework-managed revalidation
-- API/inventory responses: tuned to update frequency, preferably with surrogate cache support or explicit revalidation tags
-- Images: long CDN caching with responsive derivatives and modern formats
-
-## Getting started
-
-```bash
-npm install
-npm run dev
-```
-
-Useful commands:
-
-```bash
-npm run lint
-npm run typecheck
-npm run test:unit
-npm run test:e2e
 ```
