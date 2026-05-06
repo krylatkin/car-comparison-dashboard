@@ -13,6 +13,8 @@ type CarsComparisonTableProps = {
 
 export function CarsComparisonTable({ cars }: CarsComparisonTableProps) {
   const rows = buildComparisonTableRows();
+  const selectedSlugs = cars.map((car) => car.slug);
+  const selectedCarsParam = buildComparisonCarsParam(selectedSlugs);
 
   return (
     <div className="overflow-x-auto">
@@ -32,7 +34,7 @@ export function CarsComparisonTable({ cars }: CarsComparisonTableProps) {
               </th>
               {cars.map((car) => {
                 const nextSlugs = removeComparisonCar(
-                  cars.map((currentCar) => currentCar.slug),
+                  selectedSlugs,
                   car.slug,
                 );
                 const removeHref =
@@ -52,7 +54,12 @@ export function CarsComparisonTable({ cars }: CarsComparisonTableProps) {
                           {car.brand}
                         </p>
                         <h2 className="text-xl font-semibold tracking-tight text-ink">
-                          {car.model}
+                          <Link
+                            href={`/cars/${car.slug}?cars=${selectedCarsParam}`}
+                            className="no-underline hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                          >
+                            {car.model}
+                          </Link>
                         </h2>
                       </div>
                       <Link
@@ -92,4 +99,3 @@ export function CarsComparisonTable({ cars }: CarsComparisonTableProps) {
     </div>
   );
 }
-

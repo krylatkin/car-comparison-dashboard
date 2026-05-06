@@ -108,6 +108,29 @@ test.describe('/compare flow', () => {
     await expect(page.getByText('$68,100')).toBeVisible();
   });
 
+  test('preserves comparison params when navigating from compare to a car detail page', async ({
+    page,
+  }) => {
+    await page.goto('/compare?cars=tesla-model-y-2024,bmw-x5-2023');
+
+    await Promise.all([
+      page.waitForURL(
+        /\/cars\/tesla-model-y-2024\?cars=tesla-model-y-2024,bmw-x5-2023$/,
+      ),
+      page.getByRole('link', { name: 'Model Y' }).click(),
+    ]);
+
+    const detailUrl = new URL(page.url());
+    expect(detailUrl.pathname).toBe('/cars/tesla-model-y-2024');
+    expect(detailUrl.searchParams.get('cars')).toBe(
+      'tesla-model-y-2024,bmw-x5-2023',
+    );
+
+    await expect(
+      page.getByRole('heading', { name: /2024 tesla model y/i }),
+    ).toBeVisible();
+  });
+
   test('supports selecting cars from the catalog and removing one from comparison', async ({
     page,
   }) => {
