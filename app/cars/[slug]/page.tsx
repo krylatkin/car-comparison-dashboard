@@ -3,6 +3,11 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
+  buildComparisonCarsParam,
+  parseComparisonCarsParam,
+  toggleComparisonCar,
+} from '@/features/cars/compare/cars-compare.utils';
+import {
   getCarBySlug,
   getCars,
 } from '@/features/cars/data/cars.repository';
@@ -16,6 +21,7 @@ type CarDetailPageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 function buildCarDescription(
@@ -84,8 +90,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function CarDetailPage({ params }: CarDetailPageProps) {
+export default async function CarDetailPage({
+  params,
+  searchParams,
+}: CarDetailPageProps) {
   const { slug } = await params;
+  const query = await searchParams;
   const car = await getCarBySlug(slug);
 
   if (!car) {
@@ -93,7 +103,24 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
   }
 
   const jsonLd = buildCarJsonLd(car);
-  const compareHref = `/compare?cars=${car.slug}`;
+  const selectedComparisonSlugs = parseComparisonCarsParam(query.cars);
+  const nextSelectedComparisonSlugs = toggleComparisonCar(
+    selectedComparisonSlugs,
+    car.slug,
+  );
+  const isSelectedForComparison = selectedComparisonSlugs.includes(car.slug);
+  const selectionHref =
+    nextSelectedComparisonSlugs.length > 0
+      ? `/cars/${car.slug}?cars=${buildComparisonCarsParam(nextSelectedComparisonSlugs)}`
+      : `/cars/${car.slug}`;
+  const compareHref =
+    selectedComparisonSlugs.length > 0
+      ? `/compare?cars=${buildComparisonCarsParam(selectedComparisonSlugs)}`
+      : `/compare?cars=${car.slug}`;
+  const backToCatalogHref =
+    selectedComparisonSlugs.length > 0
+      ? `/cars?cars=${buildComparisonCarsParam(selectedComparisonSlugs)}`
+      : '/cars';
 
   return (
     <PageShell>
@@ -137,13 +164,21 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    href={compareHref}
+                    href={selectionHref}
                     className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-surface no-underline transition hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   >
-                    Compare this car
+                    {isSelectedForComparison
+                      ? 'Remove from compare'
+                      : 'Add to compare'}
                   </Link>
                   <Link
-                    href="/cars"
+                    href={compareHref}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-surface px-5 py-3 text-sm font-medium text-ink no-underline transition hover:bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    Open comparison
+                  </Link>
+                  <Link
+                    href={backToCatalogHref}
                     className="inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-surface px-5 py-3 text-sm font-medium text-ink no-underline transition hover:bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   >
                     Back to catalog
@@ -212,10 +247,12 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
                 <li>Review structured specs before filtering alternatives.</li>
               </ul>
               <Link
-                href={compareHref}
+                href={selectionHref}
                 className="text-sm font-medium text-accentDark no-underline hover:underline"
               >
-                Compare {car.model} now
+                {isSelectedForComparison
+                  ? `Remove ${car.model} from compare`
+                  : `Add ${car.model} to compare`}
               </Link>
             </CardContent>
           </Card>

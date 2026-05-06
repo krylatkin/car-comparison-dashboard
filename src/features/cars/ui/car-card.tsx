@@ -28,12 +28,16 @@ export function CarCard({
   const compareHref = canAddMore
     ? `${compareSearch}${separator}cars=${buildComparisonCarsParam(nextSelectedSlugs)}`
     : compareSearch;
+  const detailHref =
+    selectedComparisonSlugs.length > 0
+      ? `/cars/${car.slug}?cars=${buildComparisonCarsParam(selectedComparisonSlugs)}`
+      : `/cars/${car.slug}`;
 
   return (
     <Card className="overflow-hidden">
       <div className="relative aspect-[16/10] border-b border-line bg-canvas">
         <Link
-          href={`/cars/${car.slug}`}
+          href={detailHref}
           aria-label={`View details for ${car.year} ${car.brand} ${car.model}`}
           className="absolute inset-0 block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
@@ -56,7 +60,7 @@ export function CarCard({
                 {car.brand}
               </p>
               <h2 className="text-2xl font-semibold tracking-tight">
-                <Link className="no-underline" href={`/cars/${car.slug}`}>
+                <Link className="no-underline" href={detailHref}>
                   {car.model}
                 </Link>
               </h2>
