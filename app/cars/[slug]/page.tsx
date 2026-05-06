@@ -1,3 +1,5 @@
+import Image from 'next/image';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
@@ -6,13 +8,24 @@ import {
 } from '@/features/cars/data/cars.repository';
 import { buildCarJsonLd } from '@/features/cars/seo/build-car-json-ld';
 import { formatCurrency } from '@/shared/lib/formatters';
-import { PageShell } from '@/shared/ui/page-shell';
+import { Badge, Card, CardContent, PageShell } from '@/shared/ui';
+
+export const dynamicParams = false;
 
 type CarDetailPageProps = {
   params: Promise<{
     slug: string;
   }>;
 };
+
+function buildCarDescription(
+  brand: string,
+  model: string,
+  year: number,
+  type: string,
+) {
+  return `Explore pricing, rating, weight, and category details for the ${year} ${brand} ${model}, a ${type.toLowerCase()} available in the car comparison catalog.`;
+}
 
 export async function generateStaticParams() {
   const cars = await getCars();
@@ -34,16 +47,24 @@ export async function generateMetadata({
     };
   }
 
+  const title = `${car.year} ${car.brand} ${car.model}`;
+  const description = buildCarDescription(
+    car.brand,
+    car.model,
+    car.year,
+    car.type,
+  );
+
   return {
-    title: `${car.brand} ${car.model}`,
-      description: `View specs, pricing, and rating for the ${car.year} ${car.brand} ${car.model}.`,
+    title,
+    description,
     alternates: {
       canonical: `/cars/${car.slug}`,
     },
     openGraph: {
-      type: 'article',
-      title: `${car.brand} ${car.model}`,
-      description: `Detailed information for the ${car.year} ${car.brand} ${car.model}.`,
+      type: 'website',
+      title,
+      description,
       url: `https://car-comparison.example.com/cars/${car.slug}`,
       images: [
         {
@@ -53,6 +74,12 @@ export async function generateMetadata({
           alt: car.image.alt,
         },
       ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [car.image.src],
     },
   };
 }
@@ -66,10 +93,11 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
   }
 
   const jsonLd = buildCarJsonLd(car);
+  const compareHref = `/compare?cars=${car.slug}`;
 
   return (
     <PageShell>
-      <article className="space-y-8 rounded-3xl border border-line bg-surface p-8 shadow-card">
+      <article className="space-y-8">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -77,39 +105,121 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           }}
         />
 
-        <header className="space-y-3">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accentDark">
-            {car.type}
-          </p>
-          <h1 className="text-4xl font-semibold tracking-tight">
-            {car.year} {car.brand} {car.model}
-          </h1>
-          <p className="max-w-2xl text-base leading-7 text-ink/80">
-            SEO metadata, canonical routing, and structured data are already in
-            place for this detail page. The richer product layout comes next.
-          </p>
-        </header>
+        <Card className="overflow-hidden">
+          <div className="grid gap-0 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+            <div className="relative aspect-[16/11] bg-canvas">
+              <Image
+                src={car.image.src}
+                alt={car.image.alt}
+                fill
+                priority
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                className="object-cover"
+              />
+            </div>
 
-        <dl className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-line p-4">
-            <dt className="text-sm text-ink/60">Price</dt>
-            <dd className="mt-1 text-2xl font-semibold">
-              {formatCurrency(car.price)}
-            </dd>
+            <CardContent className="space-y-8 p-8">
+              <header className="space-y-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Badge variant="accent">{car.type}</Badge>
+                  <Badge variant="subtle">{car.year}</Badge>
+                </div>
+                <div className="space-y-3">
+                  <h1 className="text-4xl font-semibold tracking-tight">
+                    {car.year} {car.brand} {car.model}
+                  </h1>
+                  <p className="text-base leading-7 text-ink/80">
+                    Compare this {car.type.toLowerCase()} by price, rating,
+                    weight, and model year. This detail page is fully rendered
+                    on the server so search engines can crawl the full content
+                    without any client-side interaction.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href={compareHref}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-surface no-underline transition hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    Compare this car
+                  </Link>
+                  <Link
+                    href="/cars"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-surface px-5 py-3 text-sm font-medium text-ink no-underline transition hover:bg-canvas focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    Back to catalog
+                  </Link>
+                </div>
+              </header>
+
+              <dl className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-line p-4">
+                  <dt className="text-sm text-ink/60">Price</dt>
+                  <dd className="mt-1 text-2xl font-semibold">
+                    {formatCurrency(car.price)}
+                  </dd>
+                </div>
+                <div className="rounded-2xl border border-line p-4">
+                  <dt className="text-sm text-ink/60">Rating</dt>
+                  <dd className="mt-1 text-2xl font-semibold">
+                    {car.rating.toFixed(1)}
+                  </dd>
+                </div>
+                <div className="rounded-2xl border border-line p-4">
+                  <dt className="text-sm text-ink/60">Weight</dt>
+                  <dd className="mt-1 text-2xl font-semibold">
+                    {car.weightKg} kg
+                  </dd>
+                </div>
+                <div className="rounded-2xl border border-line p-4">
+                  <dt className="text-sm text-ink/60">Slug</dt>
+                  <dd className="mt-1 text-base font-medium">{car.slug}</dd>
+                </div>
+              </dl>
+            </CardContent>
           </div>
-          <div className="rounded-2xl border border-line p-4">
-            <dt className="text-sm text-ink/60">Rating</dt>
-            <dd className="mt-1 text-2xl font-semibold">{car.rating}</dd>
-          </div>
-          <div className="rounded-2xl border border-line p-4">
-            <dt className="text-sm text-ink/60">Weight</dt>
-            <dd className="mt-1 text-2xl font-semibold">{car.weightKg} kg</dd>
-          </div>
-          <div className="rounded-2xl border border-line p-4">
-            <dt className="text-sm text-ink/60">Slug</dt>
-            <dd className="mt-1 text-2xl font-semibold">{car.slug}</dd>
-          </div>
-        </dl>
+        </Card>
+
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <Card>
+            <CardContent className="space-y-4 p-8">
+              <h2 className="text-2xl font-semibold tracking-tight">
+                Overview
+              </h2>
+              <p className="leading-7 text-ink/80">
+                The {car.year} {car.brand} {car.model} is listed as a{' '}
+                {car.type.toLowerCase()} in this comparison catalog. Use this
+                page to inspect the core specs first, then add the car to the
+                comparison table to evaluate it against other models side by
+                side.
+              </p>
+              <p className="leading-7 text-ink/80">
+                Because this page is rendered with static params, dynamic
+                metadata, and embedded structured data, it stays indexable and
+                useful for both users and crawlers even before any interactive
+                enhancements are loaded.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="space-y-4 p-8">
+              <h2 className="text-2xl font-semibold tracking-tight">
+                Next actions
+              </h2>
+              <ul className="space-y-3 text-sm leading-6 text-ink/80">
+                <li>Open the comparison table with this car preselected.</li>
+                <li>Return to the catalog to compare more models.</li>
+                <li>Review structured specs before filtering alternatives.</li>
+              </ul>
+              <Link
+                href={compareHref}
+                className="text-sm font-medium text-accentDark no-underline hover:underline"
+              >
+                Compare {car.model} now
+              </Link>
+            </CardContent>
+          </Card>
+        </section>
       </article>
     </PageShell>
   );
