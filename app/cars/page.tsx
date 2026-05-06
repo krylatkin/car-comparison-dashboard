@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import {
+  buildCarsCatalogSearchParams,
   getCarsCatalogFilterOptions,
   parseCarsCatalogSearchParams,
 } from '@/features/cars/catalog/cars-catalog.utils';
+import { parseComparisonCarsParam } from '@/features/cars/compare/cars-compare.utils';
 import { getCars } from '@/features/cars/data/cars.repository';
 import { CarCard } from '@/features/cars/ui/car-card';
+import { ComparisonSelectionBar } from '@/features/cars/ui/comparison-selection-bar';
 import { CarsCatalogFilters } from '@/features/cars/ui/cars-catalog-filters';
 import {
   Badge,
@@ -27,6 +30,7 @@ type CarsPageProps = {
 export default async function CarsPage({ searchParams }: CarsPageProps) {
   const params = await searchParams;
   const state = parseCarsCatalogSearchParams(params);
+  const selectedComparisonSlugs = parseComparisonCarsParam(params.cars);
   const [allCars, cars] = await Promise.all([
     getCars(),
     getCars({
@@ -35,6 +39,9 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
     }),
   ]);
   const filterOptions = getCarsCatalogFilterOptions(allCars);
+  const compareSearchParams = buildCarsCatalogSearchParams(state);
+  const compareSearch = compareSearchParams.toString();
+  const compareBaseHref = compareSearch ? `/cars?${compareSearch}` : '/cars';
 
   return (
     <PageShell>
@@ -56,9 +63,15 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
           </div>
         </header>
 
+        <ComparisonSelectionBar selectedSlugs={selectedComparisonSlugs} />
+
         <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
           <aside aria-label="Catalog filters">
-            <CarsCatalogFilters options={filterOptions} state={state} />
+            <CarsCatalogFilters
+              options={filterOptions}
+              state={state}
+              selectedComparisonSlugs={selectedComparisonSlugs}
+            />
           </aside>
 
           <div>
@@ -66,7 +79,11 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
               <ul className="grid gap-5 sm:grid-cols-2 2xl:grid-cols-3">
                 {cars.map((car) => (
                   <li key={car.id}>
-                    <CarCard car={car} />
+                    <CarCard
+                      car={car}
+                      compareSearch={compareBaseHref}
+                      selectedComparisonSlugs={selectedComparisonSlugs}
+                    />
                   </li>
                 ))}
               </ul>

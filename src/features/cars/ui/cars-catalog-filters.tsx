@@ -19,12 +19,19 @@ import {
 type CarsCatalogFiltersProps = {
   options: CarsCatalogFilterOptions;
   state: CarsCatalogState;
+  selectedComparisonSlugs: string[];
 };
 
 export function CarsCatalogFilters({
   options,
   state,
+  selectedComparisonSlugs,
 }: CarsCatalogFiltersProps) {
+  const resetHref =
+    selectedComparisonSlugs.length > 0
+      ? `/cars?cars=${selectedComparisonSlugs.join(',')}`
+      : '/cars';
+
   return (
     <Card className="h-fit">
       <CardHeader className="space-y-3">
@@ -36,7 +43,7 @@ export function CarsCatalogFilters({
             <CardTitle>Refine inventory</CardTitle>
           </div>
           <Link
-            href="/cars"
+            href={resetHref}
             className="text-sm font-medium text-accentDark no-underline hover:underline"
           >
             Reset
@@ -45,6 +52,13 @@ export function CarsCatalogFilters({
       </CardHeader>
       <CardContent>
         <form action="/cars" className="space-y-6">
+          {selectedComparisonSlugs.length > 0 ? (
+            <input
+              type="hidden"
+              name="cars"
+              value={selectedComparisonSlugs.join(',')}
+            />
+          ) : null}
           <fieldset className="space-y-3">
             <legend className="text-sm font-medium text-ink">Sort by</legend>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">

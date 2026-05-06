@@ -97,3 +97,32 @@ export function getCarsCatalogFilterOptions(cars: Car[]): CarsCatalogFilterOptio
     types,
   };
 }
+
+export function buildCarsCatalogSearchParams(state: CarsCatalogState) {
+  const params = new URLSearchParams();
+
+  state.filters.brands.forEach((brand) => {
+    params.append('brand', brand);
+  });
+
+  state.filters.types.forEach((type) => {
+    params.append('type', type);
+  });
+
+  if (state.filters.priceMin !== undefined) {
+    params.set('priceMin', String(state.filters.priceMin));
+  }
+
+  if (state.filters.priceMax !== undefined) {
+    params.set('priceMax', String(state.filters.priceMax));
+  }
+
+  if (state.filters.ratingMin !== undefined) {
+    params.set('ratingMin', String(state.filters.ratingMin));
+  }
+
+  params.set('sort', state.sort.field);
+  params.set('direction', state.sort.direction);
+
+  return params;
+}

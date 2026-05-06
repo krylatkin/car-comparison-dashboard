@@ -1,14 +1,34 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Car } from '@/features/cars/domain/car.types';
+import {
+  buildComparisonCarsParam,
+  toggleComparisonCar,
+} from '@/features/cars/compare/cars-compare.utils';
+import { MAX_COMPARISON_CARS } from '@/features/cars/compare/cars-compare.constants';
 import { formatCurrency } from '@/shared/lib/formatters';
 import { Badge, Card, CardContent } from '@/shared/ui';
 
 type CarCardProps = {
   car: Car;
+  compareSearch: string;
+  selectedComparisonSlugs: string[];
 };
 
-export function CarCard({ car }: CarCardProps) {
+export function CarCard({
+  car,
+  compareSearch,
+  selectedComparisonSlugs,
+}: CarCardProps) {
+  const isSelected = selectedComparisonSlugs.includes(car.slug);
+  const nextSelectedSlugs = toggleComparisonCar(selectedComparisonSlugs, car.slug);
+  const canAddMore =
+    selectedComparisonSlugs.length < MAX_COMPARISON_CARS || isSelected;
+  const separator = compareSearch.includes('?') ? '&' : '?';
+  const compareHref = canAddMore
+    ? `${compareSearch}${separator}cars=${buildComparisonCarsParam(nextSelectedSlugs)}`
+    : compareSearch;
+
   return (
     <Card className="overflow-hidden">
       <div className="relative aspect-[16/10] border-b border-line bg-canvas">
@@ -57,12 +77,18 @@ export function CarCard({ car }: CarCardProps) {
           <div>
             <dt className="text-ink/60">Compare</dt>
             <dd className="font-medium">
-              <Link
-                href={`/compare?cars=${car.slug}`}
-                className="text-accentDark no-underline hover:underline"
-              >
-                Open compare
-              </Link>
+              {canAddMore ? (
+                <Link
+                  href={compareHref}
+                  className="text-accentDark no-underline hover:underline"
+                >
+                  {isSelected ? 'Remove from compare' : 'Add to compare'}
+                </Link>
+              ) : (
+                <span className="text-ink/50">
+                  Compare limit reached
+                </span>
+              )}
             </dd>
           </div>
         </dl>
@@ -70,4 +96,3 @@ export function CarCard({ car }: CarCardProps) {
     </Card>
   );
 }
-
