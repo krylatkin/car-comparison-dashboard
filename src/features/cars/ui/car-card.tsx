@@ -36,6 +36,7 @@ export function CarCard({
           src={car.image.src}
           alt={car.image.alt}
           fill
+          loading="lazy"
           sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
           className="object-cover"
         />
