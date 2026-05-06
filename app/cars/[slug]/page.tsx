@@ -109,17 +109,21 @@ export default async function CarDetailPage({
     car.slug,
   );
   const isSelectedForComparison = selectedComparisonSlugs.includes(car.slug);
+  const selectedCarsParam = buildComparisonCarsParam(selectedComparisonSlugs);
+  const nextSelectedCarsParam = buildComparisonCarsParam(
+    nextSelectedComparisonSlugs,
+  );
   const selectionHref =
-    nextSelectedComparisonSlugs.length > 0
-      ? `/cars/${car.slug}?cars=${buildComparisonCarsParam(nextSelectedComparisonSlugs)}`
+    nextSelectedCarsParam.length > 0
+      ? `/cars/${car.slug}?cars=${nextSelectedCarsParam}`
       : `/cars/${car.slug}`;
   const compareHref =
-    selectedComparisonSlugs.length > 0
-      ? `/compare?cars=${buildComparisonCarsParam(selectedComparisonSlugs)}`
+    selectedCarsParam.length > 0
+      ? `/compare?cars=${selectedCarsParam}`
       : `/compare?cars=${car.slug}`;
   const backToCatalogHref =
-    selectedComparisonSlugs.length > 0
-      ? `/cars?cars=${buildComparisonCarsParam(selectedComparisonSlugs)}`
+    selectedCarsParam.length > 0
+      ? `/cars?cars=${selectedCarsParam}`
       : '/cars';
 
   return (
