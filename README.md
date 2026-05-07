@@ -239,3 +239,30 @@ tests/
   components/
   e2e/
 ```
+
+## Dist structure
+
+
+```text
+Route (app)                                 Size  First Load JS    
+┌ ○ /                                      161 B         106 kB
+├ ○ /_not-found                            995 B         103 kB
+├ ƒ /cars                                1.02 kB         112 kB
+├ ● /cars/[slug]                         1.02 kB         112 kB
+├   ├ /cars/tesla-model-y-2024
+├   ├ /cars/bmw-x5-2023
+├   ├ /cars/toyota-camry-2024
+├   └ [+5 more paths]
+├ ƒ /compare                               162 B         106 kB
+├ ○ /robots.txt                            139 B         102 kB
+└ ○ /sitemap.xml                           139 B         102 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/255-4f212684648fcab9.js         46 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+```

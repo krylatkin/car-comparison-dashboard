@@ -33,7 +33,7 @@ export function ComparisonSelectionBar({
         </div>
         <Link
           href={compareHref}
-          className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-surface no-underline transition hover:bg-ink/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:w-auto"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-medium text-surface no-underline transition hover:bg-ink/90 hover:text-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:w-auto"
         >
           Compare selected cars
         </Link>

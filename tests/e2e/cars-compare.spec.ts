@@ -72,22 +72,25 @@ test.describe('/compare flow', () => {
     await expect(page).toHaveURL(/cars=bmw-x5-2023|cars=audi-a5-2023/);
 
     await Promise.all([
-      page.waitForURL(/\/cars\/bmw-x5-2023\?cars=audi-a5-2023,bmw-x5-2023$/),
+      page.waitForURL(/\/cars\/bmw-x5-2023/),
       page
         .locator('header')
         .getByRole('button', { name: 'Add to compare' })
         .click(),
     ]);
     await expect(
-      page.getByRole('button', { name: 'Remove from compare' }),
+      page.locator('header').getByRole('button', { name: 'Remove from compare' }),
     ).toBeVisible();
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('cars'))
+      .toBe('audi-a5-2023,bmw-x5-2023');
 
     const detailUrl = new URL(page.url());
     expect(detailUrl.pathname).toBe('/cars/bmw-x5-2023');
     expect(detailUrl.searchParams.get('cars')).toBe('audi-a5-2023,bmw-x5-2023');
 
     await Promise.all([
-      page.waitForURL(/\/compare\?cars=audi-a5-2023,bmw-x5-2023$/),
+      page.waitForURL(/\/compare/),
       page.getByRole('link', { name: /open comparison/i }).click(),
     ]);
 
@@ -118,9 +121,7 @@ test.describe('/compare flow', () => {
     await page.goto('/compare?cars=tesla-model-y-2024,bmw-x5-2023');
 
     await Promise.all([
-      page.waitForURL(
-        /\/cars\/tesla-model-y-2024\?cars=tesla-model-y-2024,bmw-x5-2023$/,
-      ),
+      page.waitForURL(/\/cars\/tesla-model-y-2024/),
       page.getByRole('link', { name: 'Model Y' }).click(),
     ]);
 

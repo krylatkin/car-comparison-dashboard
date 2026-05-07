@@ -71,16 +71,15 @@ export function CarCard({ car, selectedComparisonSlugs }: CarCardProps) {
             <dt className="text-ink/60">Weight</dt>
             <dd className="font-medium">{car.weightKg} kg</dd>
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <dt className="text-ink/60">Compare</dt>
-            <dd className="font-medium">
-              <CompareToggleButton
-                slug={car.slug}
-                selectedSlugs={selectedComparisonSlugs}
-                className="mt-1"
-              />
-            </dd>
-          </div>
+        <div className="col-span-2 sm:col-span-1">
+          <dd className="font-medium">
+          <CompareToggleButton
+            slug={car.slug}
+            selectedSlugs={selectedComparisonSlugs}
+            className="mt-1"
+          />
+          </dd>
+        </div>
         </dl>
       </CardContent>
     </Card>

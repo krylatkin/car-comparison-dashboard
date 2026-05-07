@@ -28,12 +28,17 @@ export function CompareToggleButton({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const [isHydrated, setIsHydrated] = useState(false);
   const selectedSlugsKey = useMemo(
     () => selectedSlugs.join(','),
     [selectedSlugs],
   );
   const [optimisticSelectedSlugs, setOptimisticSelectedSlugs] =
     useState(selectedSlugs);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     setOptimisticSelectedSlugs(selectedSlugs);
@@ -86,7 +91,7 @@ export function CompareToggleButton({
     <button
       type="button"
       onClick={handleClick}
-      disabled={isPending}
+      disabled={isPending || !isHydrated}
       aria-pressed={isSelected}
       className={cn(buttonClassName, className)}
     >

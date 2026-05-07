@@ -5,9 +5,6 @@ export default function HomePage() {
   return (
     <PageShell>
       <section className="space-y-6 rounded-3xl border border-line bg-surface p-8 shadow-card">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accentDark">
-          Senior Frontend Assignment
-        </p>
         <div className="space-y-4">
           <h1 className="max-w-3xl text-4xl font-semibold tracking-tight">
             Car Comparison Dashboard foundation
@@ -20,7 +17,7 @@ export default function HomePage() {
         </div>
         <div className="flex flex-wrap gap-3">
           <Link
-            className="rounded-full bg-ink px-5 py-3 text-sm font-medium text-surface no-underline"
+            className="rounded-full bg-ink px-5 py-3 text-sm font-medium text-surface no-underline hover:bg-ink/90 hover:text-surface"
             href="/cars"
           >
             Browse cars
