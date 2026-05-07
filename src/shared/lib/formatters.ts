@@ -7,4 +7,3 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 export function formatCurrency(value: number) {
   return currencyFormatter.format(value);
 }
-

@@ -33,10 +33,7 @@ export function CarsComparisonTable({ cars }: CarsComparisonTableProps) {
                 Specification
               </th>
               {cars.map((car) => {
-                const nextSlugs = removeComparisonCar(
-                  selectedSlugs,
-                  car.slug,
-                );
+                const nextSlugs = removeComparisonCar(selectedSlugs, car.slug);
                 const removeHref =
                   nextSlugs.length > 0
                     ? `/compare?cars=${buildComparisonCarsParam(nextSlugs)}`
@@ -76,7 +73,10 @@ export function CarsComparisonTable({ cars }: CarsComparisonTableProps) {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.label} className="border-b border-line last:border-b-0">
+              <tr
+                key={row.label}
+                className="border-b border-line last:border-b-0"
+              >
                 <th
                   scope="row"
                   className="bg-surface px-4 py-4 text-sm font-medium text-ink"

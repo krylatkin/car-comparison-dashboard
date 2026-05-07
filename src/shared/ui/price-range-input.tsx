@@ -53,7 +53,10 @@ export function PriceRangeInput({
   const isMaxControlled = onMaxValueChange !== undefined;
 
   return (
-    <fieldset className={cn('space-y-3', className)} aria-describedby={descriptionId}>
+    <fieldset
+      className={cn('space-y-3', className)}
+      aria-describedby={descriptionId}
+    >
       <legend className="text-sm font-medium text-ink">{label}</legend>
       {description ? (
         <p id={descriptionId} className="text-sm text-ink/65">
@@ -62,7 +65,9 @@ export function PriceRangeInput({
       ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="space-y-2">
-          <span className="text-sm text-ink/70">{labels?.min ?? 'Minimum'}</span>
+          <span className="text-sm text-ink/70">
+            {labels?.min ?? 'Minimum'}
+          </span>
           <input
             inputMode="numeric"
             type="number"
@@ -84,7 +89,9 @@ export function PriceRangeInput({
           />
         </label>
         <label className="space-y-2">
-          <span className="text-sm text-ink/70">{labels?.max ?? 'Maximum'}</span>
+          <span className="text-sm text-ink/70">
+            {labels?.max ?? 'Maximum'}
+          </span>
           <input
             inputMode="numeric"
             type="number"

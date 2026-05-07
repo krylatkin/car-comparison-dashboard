@@ -23,13 +23,19 @@ describe('cars-compare.utils', () => {
   });
 
   it('toggles cars while enforcing the max comparison limit', () => {
-    expect(
-      toggleComparisonCar(['tesla-model-y-2024'], 'bmw-x5-2023'),
-    ).toEqual(['tesla-model-y-2024', 'bmw-x5-2023']);
+    expect(toggleComparisonCar(['tesla-model-y-2024'], 'bmw-x5-2023')).toEqual([
+      'tesla-model-y-2024',
+      'bmw-x5-2023',
+    ]);
 
     expect(
       toggleComparisonCar(
-        ['tesla-model-y-2024', 'bmw-x5-2023', 'audi-a5-2023', 'ford-f-150-2024'],
+        [
+          'tesla-model-y-2024',
+          'bmw-x5-2023',
+          'audi-a5-2023',
+          'ford-f-150-2024',
+        ],
         'kia-sportage-2024',
       ),
     ).toEqual([
@@ -69,4 +75,3 @@ describe('cars-compare.utils', () => {
     ]);
   });
 });
-

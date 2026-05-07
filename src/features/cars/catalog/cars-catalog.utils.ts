@@ -80,7 +80,9 @@ export function parseCarsCatalogSearchParams(
   };
 }
 
-export function getCarsCatalogFilterOptions(cars: Car[]): CarsCatalogFilterOptions {
+export function getCarsCatalogFilterOptions(
+  cars: Car[],
+): CarsCatalogFilterOptions {
   const brands = Array.from(new Set(cars.map((car) => car.brand)))
     .sort((left, right) => left.localeCompare(right))
     .map((brand) => ({
@@ -88,8 +90,8 @@ export function getCarsCatalogFilterOptions(cars: Car[]): CarsCatalogFilterOptio
       value: brand,
     }));
 
-  const types = Array.from(new Set(cars.map((car) => car.type))).sort((left, right) =>
-    left.localeCompare(right),
+  const types = Array.from(new Set(cars.map((car) => car.type))).sort(
+    (left, right) => left.localeCompare(right),
   );
 
   return {

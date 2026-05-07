@@ -12,10 +12,7 @@ type CarCardProps = {
   selectedComparisonSlugs: string[];
 };
 
-export function CarCard({
-  car,
-  selectedComparisonSlugs,
-}: CarCardProps) {
+export function CarCard({ car, selectedComparisonSlugs }: CarCardProps) {
   const detailHref =
     selectedComparisonSlugs.length > 0
       ? `/cars/${car.slug}?cars=${buildComparisonCarsParam(selectedComparisonSlugs)}`

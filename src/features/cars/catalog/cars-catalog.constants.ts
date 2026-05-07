@@ -44,4 +44,3 @@ export const carRatingOptions: SelectOption[] = [
     value: '4.7',
   },
 ];
-

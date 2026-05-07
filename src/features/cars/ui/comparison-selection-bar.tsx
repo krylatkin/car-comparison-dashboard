@@ -1,7 +1,5 @@
 import Link from 'next/link';
-import {
-  buildComparisonCarsParam,
-} from '@/features/cars/compare/cars-compare.utils';
+import { buildComparisonCarsParam } from '@/features/cars/compare/cars-compare.utils';
 import { MAX_COMPARISON_CARS } from '@/features/cars/compare/cars-compare.constants';
 import { Badge, Card, CardContent } from '@/shared/ui';
 

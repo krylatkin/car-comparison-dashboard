@@ -14,4 +14,3 @@ export type CarType = z.infer<typeof CarTypeSchema>;
 export type CarFilters = z.infer<typeof CarFiltersSchema>;
 export type CarSortField = z.infer<typeof CarSortFieldSchema>;
 export type CarSortDirection = z.infer<typeof CarSortDirectionSchema>;
-

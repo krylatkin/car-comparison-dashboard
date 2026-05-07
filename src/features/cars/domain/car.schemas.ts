@@ -22,7 +22,11 @@ export const CarImageSchema = z.object({
 
 export const CarSchema = z.object({
   id: z.string().uuid(),
-  slug: z.string().min(3).max(80).regex(/^[a-z0-9-]+$/),
+  slug: z
+    .string()
+    .min(3)
+    .max(80)
+    .regex(/^[a-z0-9-]+$/),
   brand: z.string().min(2).max(60),
   model: z.string().min(1).max(80),
   year: z.number().int().min(1990).max(2035),

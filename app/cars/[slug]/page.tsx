@@ -6,10 +6,7 @@ import {
   buildComparisonCarsParam,
   parseComparisonCarsParam,
 } from '@/features/cars/compare/cars-compare.utils';
-import {
-  getCarBySlug,
-  getCars,
-} from '@/features/cars/data/cars.repository';
+import { getCarBySlug, getCars } from '@/features/cars/data/cars.repository';
 import { CompareToggleButton } from '@/features/cars/ui/compare-toggle-button';
 import { getCarImageObjectPosition } from '@/features/cars/ui/car-image.styles';
 import { buildCarJsonLd } from '@/features/cars/seo/build-car-json-ld';
@@ -111,9 +108,7 @@ export default async function CarDetailPage({
       ? `/compare?cars=${selectedCarsParam}`
       : `/compare?cars=${car.slug}`;
   const backToCatalogHref =
-    selectedCarsParam.length > 0
-      ? `/cars?cars=${selectedCarsParam}`
-      : '/cars';
+    selectedCarsParam.length > 0 ? `/cars?cars=${selectedCarsParam}` : '/cars';
 
   return (
     <PageShell>

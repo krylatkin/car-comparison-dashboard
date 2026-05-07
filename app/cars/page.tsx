@@ -8,11 +8,7 @@ import { getCars } from '@/features/cars/data/cars.repository';
 import { CarCard } from '@/features/cars/ui/car-card';
 import { ComparisonSelectionBar } from '@/features/cars/ui/comparison-selection-bar';
 import { CarsCatalogFilters } from '@/features/cars/ui/cars-catalog-filters';
-import {
-  Badge,
-  EmptyState,
-  PageShell,
-} from '@/shared/ui';
+import { Badge, EmptyState, PageShell } from '@/shared/ui';
 
 export const metadata: Metadata = {
   title: 'Cars',

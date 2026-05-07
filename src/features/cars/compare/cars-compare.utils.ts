@@ -89,4 +89,3 @@ export function getCarsBySelectedSlugs(cars: Car[], selectedSlugs: string[]) {
     return car ? [car] : [];
   });
 }
-

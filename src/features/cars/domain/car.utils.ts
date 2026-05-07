@@ -14,13 +14,17 @@ export function filterCars(cars: Car[], filters: CarFilters): Car[] {
       parsedFilters.brands.length === 0 ||
       parsedFilters.brands.includes(car.brand);
     const matchesType =
-      parsedFilters.types.length === 0 || parsedFilters.types.includes(car.type);
+      parsedFilters.types.length === 0 ||
+      parsedFilters.types.includes(car.type);
     const matchesMinPrice =
-      parsedFilters.priceMin === undefined || car.price >= parsedFilters.priceMin;
+      parsedFilters.priceMin === undefined ||
+      car.price >= parsedFilters.priceMin;
     const matchesMaxPrice =
-      parsedFilters.priceMax === undefined || car.price <= parsedFilters.priceMax;
+      parsedFilters.priceMax === undefined ||
+      car.price <= parsedFilters.priceMax;
     const matchesRating =
-      parsedFilters.ratingMin === undefined || car.rating >= parsedFilters.ratingMin;
+      parsedFilters.ratingMin === undefined ||
+      car.rating >= parsedFilters.ratingMin;
 
     return (
       matchesBrand &&
@@ -69,4 +73,3 @@ export function sortCars(
     ),
   );
 }
-

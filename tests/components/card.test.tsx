@@ -28,4 +28,3 @@ describe('Card', () => {
     expect(screen.getByText('8 results')).toBeVisible();
   });
 });
-

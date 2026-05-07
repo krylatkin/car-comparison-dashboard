@@ -1,10 +1,20 @@
 import { cache } from 'react';
 import { carFixtures } from './cars.mock';
 import { CarListSchema } from '@/features/cars/domain/car.schemas';
-import type { Car, CarFilters, CarSortDirection, CarSortField } from '@/features/cars/domain/car.types';
-import { filterCars as applyFilters, sortCars as applySort } from '@/features/cars/domain/car.utils';
+import type {
+  Car,
+  CarFilters,
+  CarSortDirection,
+  CarSortField,
+} from '@/features/cars/domain/car.types';
+import {
+  filterCars as applyFilters,
+  sortCars as applySort,
+} from '@/features/cars/domain/car.utils';
 
-const loadCars = cache((): Promise<Car[]> => Promise.resolve(CarListSchema.parse(carFixtures)));
+const loadCars = cache(
+  (): Promise<Car[]> => Promise.resolve(CarListSchema.parse(carFixtures)),
+);
 
 export const getCars = cache(
   async (options?: {
@@ -15,7 +25,9 @@ export const getCars = cache(
     };
   }) => {
     const cars = await loadCars();
-    const filteredCars = options?.filters ? applyFilters(cars, options.filters) : cars;
+    const filteredCars = options?.filters
+      ? applyFilters(cars, options.filters)
+      : cars;
 
     return options?.sort ? applySort(filteredCars, options.sort) : filteredCars;
   },

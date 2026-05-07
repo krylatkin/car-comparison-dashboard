@@ -32,9 +32,8 @@ export function CompareToggleButton({
     () => selectedSlugs.join(','),
     [selectedSlugs],
   );
-  const [optimisticSelectedSlugs, setOptimisticSelectedSlugs] = useState(
-    selectedSlugs,
-  );
+  const [optimisticSelectedSlugs, setOptimisticSelectedSlugs] =
+    useState(selectedSlugs);
 
   useEffect(() => {
     setOptimisticSelectedSlugs(selectedSlugs);

@@ -1,4 +1,9 @@
-import type { CarFilters, CarSortDirection, CarSortField, CarType } from '@/features/cars/domain/car.types';
+import type {
+  CarFilters,
+  CarSortDirection,
+  CarSortField,
+  CarType,
+} from '@/features/cars/domain/car.types';
 
 export type CarsCatalogState = {
   filters: CarFilters;
@@ -17,4 +22,3 @@ export type CarsCatalogFilterOptions = {
   brands: CarFilterOption[];
   types: CarType[];
 };
-

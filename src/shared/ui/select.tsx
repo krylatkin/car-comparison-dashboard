@@ -20,21 +20,29 @@ export type SelectProps = Omit<
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   (
-    { className, error, hint, id, label, options, placeholder, required, ...props },
+    {
+      className,
+      error,
+      hint,
+      id,
+      label,
+      options,
+      placeholder,
+      required,
+      ...props
+    },
     ref,
   ) => {
     const generatedId = React.useId();
     const selectId = id ?? generatedId;
     const hintId = hint ? `${selectId}-hint` : undefined;
     const errorId = error ? `${selectId}-error` : undefined;
-    const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
+    const describedBy =
+      [hintId, errorId].filter(Boolean).join(' ') || undefined;
 
     return (
       <div className="space-y-2">
-        <label
-          htmlFor={selectId}
-          className="text-sm font-medium text-ink"
-        >
+        <label htmlFor={selectId} className="text-sm font-medium text-ink">
           {label}
           {required ? <span aria-hidden="true"> *</span> : null}
         </label>
@@ -90,4 +98,3 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 );
 
 Select.displayName = 'Select';
-

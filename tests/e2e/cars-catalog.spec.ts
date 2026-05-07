@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('/cars catalog', () => {
-  test('renders the catalog grid and default sorting state', async ({ page }) => {
+  test('renders the catalog grid and default sorting state', async ({
+    page,
+  }) => {
     await page.goto('/cars');
 
-    await expect(
-      page.getByRole('heading', { name: /^cars$/i }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /^cars$/i })).toBeVisible();
     await expect(page.getByText('8 results')).toBeVisible();
     await expect(page.getByText('Sorted by brand (asc)')).toBeVisible();
     await expect(
@@ -42,7 +42,9 @@ test.describe('/cars catalog', () => {
     await expect(page.getByRole('heading', { name: 'Ioniq 5' })).toHaveCount(0);
   });
 
-  test('shows the empty state when filters produce no matches', async ({ page }) => {
+  test('shows the empty state when filters produce no matches', async ({
+    page,
+  }) => {
     await page.goto(
       '/cars?brand=Tesla&type=Truck&priceMin=100000&sort=brand&direction=asc',
     );

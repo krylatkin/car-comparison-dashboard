@@ -1,5 +1,8 @@
 import Link from 'next/link';
-import type { CarsCatalogFilterOptions, CarsCatalogState } from '@/features/cars/catalog/cars-catalog.types';
+import type {
+  CarsCatalogFilterOptions,
+  CarsCatalogState,
+} from '@/features/cars/catalog/cars-catalog.types';
 import {
   carRatingOptions,
   carSortDirectionOptions,

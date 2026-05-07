@@ -9,4 +9,3 @@ export function PageShell({ children }: PageShellProps) {
     </main>
   );
 }
-

@@ -8,4 +8,3 @@ export type CarsComparisonTableRow = {
   label: string;
   renderValue: (car: Car) => string;
 };
-

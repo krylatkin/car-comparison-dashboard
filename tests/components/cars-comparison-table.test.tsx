@@ -22,7 +22,9 @@ describe('CarsComparisonTable', () => {
     expect(within(table).getAllByText('X5')).toHaveLength(2);
     expect(within(table).getAllByText('Camry')).toHaveLength(2);
 
-    expect(within(table).getByRole('rowheader', { name: 'Price' })).toBeVisible();
+    expect(
+      within(table).getByRole('rowheader', { name: 'Price' }),
+    ).toBeVisible();
     expect(within(table).getByText('$52,990')).toBeVisible();
     expect(
       within(table).getAllByRole('link', { name: /remove from comparison/i }),

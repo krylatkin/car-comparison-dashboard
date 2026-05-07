@@ -7,4 +7,3 @@ test('renders the home page', async ({ page }) => {
     page.getByRole('heading', { name: /car comparison dashboard foundation/i }),
   ).toBeVisible();
 });
-

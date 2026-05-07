@@ -38,7 +38,9 @@ export function CardDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm leading-6 text-ink/70', className)} {...props} />;
+  return (
+    <p className={cn('text-sm leading-6 text-ink/70', className)} {...props} />
+  );
 }
 
 export function CardContent({
