@@ -47,6 +47,38 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Screenshots
+
+### Cars catalog
+
+![Cars catalog](docs/Screenshot%202026-05-08%20at%206.34.45%E2%80%AFAM.png)
+
+Comment: the catalog route keeps filtering, sorting, and comparison selection in the URL so the state stays shareable and SEO-friendly.
+
+### Car details
+
+![Car details](docs/Screenshot%202026-05-08%20at%206.35.03%E2%80%AFAM.png)
+
+Comment: the detail page surfaces core specs, server-rendered content, and a direct path into the comparison flow.
+
+### Comparison table
+
+![Comparison table](docs/Screenshot%202026-05-08%20at%206.35.33%E2%80%AFAM.png)
+
+Comment: the comparison screen renders selected cars side by side in a semantic table, making differences easy to scan.
+
+### Lighthouse: Cars catalog
+
+![Lighthouse Cars catalog](docs/Screenshot%202026-05-08%20at%206.19.41%E2%80%AFAM.png)
+
+Comment: Lighthouse audit for the `/cars` route, showing the current quality baseline for performance, accessibility, best practices, and SEO.
+
+### Lighthouse: Car details
+
+![Lighthouse Car details](docs/Screenshot%202026-05-08%20at%206.20.19%E2%80%AFAM.png)
+
+Comment: Lighthouse audit for the `/cars/[slug]` route, validating the detail page experience with metadata, image loading, and crawlable content.
+
 ## Commands
 
 ### Test commands
@@ -148,7 +180,7 @@ The goal is that search engines can extract meaningful inventory and detail info
 
 - Performance: 90+
 - Accessibility: 95+
-- SEO: 95+
+- SEO: 90+
 
 ### Current implementation
 
